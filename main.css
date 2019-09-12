@@ -2,8 +2,13 @@
   width: 30px;
   height: 30px;
   border: black 1px solid;
+  cursor: pointer;
 }
 
 .mine {
   background: red;
+}
+
+.clicked {
+  background: lightgray;
 }
