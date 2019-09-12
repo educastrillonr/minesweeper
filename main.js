@@ -31,10 +31,16 @@ class Cell {
   };
 
   handleCellClick = () => {
-    this._isAMine ? alert("Game Over") : null;
+    // this._isAMine
+    //   ? alert("Game Over")
+    //   : // this._cellDom.onclick = null;
+    //     null;
+    if (this._isAMine) {
+      this._cellDom.onclick = null;
+      alert("Game Over");
+    }
   };
 }
-
 const getGrid = (rows, columns, mines) => {
   let cellArray = [];
   for (let i = 0; i < rows; i++) {
@@ -49,7 +55,6 @@ const getGrid = (rows, columns, mines) => {
   console.log(cellArray);
 
   getMines(cellArray, mines);
-  colour(cellArray);
 };
 
 const getMines = (cellArray, mines) => {
@@ -60,7 +65,7 @@ const getMines = (cellArray, mines) => {
   }
 };
 
-const colour = cellArray => {
+const revealMines = cellArray => {
   for (let index = 0; index < cellArray.length; index++) {
     for (let index2 = 0; index2 < cellArray[index].length; index2++) {
       let cell = cellArray[index][index2];
