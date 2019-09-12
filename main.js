@@ -26,6 +26,10 @@ class Cell {
     return this._cellDom;
   }
 
+  get mines() {
+    return this._mines;
+  }
+
   set neighbours(newCell) {
     this._neighbours.push(newCell);
   }
@@ -157,7 +161,7 @@ const getRandomCell = cellArray => {
 const generateClue = cellArray => {
   let cell = getRandomCell(cellArray);
 
-  while (cell.isAMine || cell.cellDom.innerHTML === 0) {
+  while (cell.isAMine || cell.mines === 0) {
     cell = getRandomCell(cellArray);
   }
   cell.handleCellClick(cellArray);
