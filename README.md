@@ -1,37 +1,29 @@
-## Welcome to GitHub Pages
+# MineSweeper Generator
 
-You can use the [editor on GitHub](https://github.com/educastrillonr/minesweeper/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Demo: https://educastrillonr.github.io/minesweeper/
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+I have chosen to build this program in JavaScript + HTML as it is what I feel the most confident in currently.
 
-### Markdown
+## Task
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+The goal of this program is to create a MineSweeper game field with any given (positive) size and solve it.
 
-```markdown
-Syntax highlighted code block
+## Approach
 
-# Header 1
-## Header 2
-### Header 3
+In order to do this, I genereate a two dimensional array with the given sizes and populate a HTML table for user visualisation aswell as a `candidates` array which will help me track which cells have already been visited. Each cell is now populated by an instance of the `class Cell`. This class has the properties of:
 
-- Bulleted
-- List
+- `isAMine`: boolean which returns `true` if said cell is a mine.
+- `coord` : X and Y coordinates of the cell in the field.
+- `cellDom`: object used for DOM manipulation.
+- `mines`: number of mines the cell is in "contact" with.
+- `neighbours`: references to the adjacents cells.
 
-1. Numbered
-2. List
+After generating the field, I assign random cells to be mines.<br>
+Following this I populate the `neighbours` property and check which ones are mines. By doing this every cell in the grid now can be "asked" for its mine count.
 
-**Bold** and _Italic_ and `Code` text
+In order to solve the field, I first created a function that would deal with a user's click and reveal wether it's a mine or its mine count. I did this because my first interpretation of the problem was to build the game in itself. <br>
+After realising the test asked for the code to solve it, I created a function that would simulate a user's click based on a random cell and repeating said process recursively until there are no candidates left.
 
-[Link](url) and ![Image](src)
-```
+## Conclusion
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/educastrillonr/minesweeper/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+In hindsight, I think I could reduce the number of steps I take to solve the problem by solving it as the field is being generated. I am quite happy I could work my way around the fact I misinterpreted the problem at first. Repurposing the codebase and automating it was a fun challenge. 
