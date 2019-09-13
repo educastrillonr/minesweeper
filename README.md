@@ -2,7 +2,7 @@
 
 Demo: https://educastrillonr.github.io/minesweeper/
 
-I have chosen to build this program in JavaScript + HTML as it is what I feel the most confident in currently.
+I have chosen to build this program in JavaScript as it is what I feel the most confident in currently.
 
 ## Task
 
