@@ -2,6 +2,8 @@ const get = id => {
   return document.getElementById(id);
 };
 
+let candidates = [];
+
 class Cell {
   constructor(isAMine, x, y) {
     this._isAMine = isAMine;
@@ -52,7 +54,7 @@ class Cell {
       alert("Game Over");
     } else {
       this.cellDom.className = "clicked";
-      this.cellDom.onclick = null;
+      // this.cellDom.onclick = null;
       this.cellDom.innerHTML = this._mines > 0 ? this._mines : " ";
       if (this._mines === 0) {
         for (let index = 0; index < this._neighbours.length; index++) {
@@ -62,7 +64,7 @@ class Cell {
         }
       }
       if (isComplete(cellArray)) {
-        alert("YOU WIN");
+        cellArray = [];
       }
     }
   };
@@ -82,6 +84,7 @@ const isComplete = cellArray => {
 
 const getGrid = (rows, columns, mines) => {
   let cellArray = [];
+  candidates = [];
   for (let x = 0; x < rows; x++) {
     let row = get("grid").insertRow(x);
     cellArray.push([]);
@@ -90,6 +93,7 @@ const getGrid = (rows, columns, mines) => {
       cell.insertCell(row);
       cell.cellDom.onclick = () => cell.handleCellClick(cellArray);
       cellArray[x].push(cell);
+      candidates.push(cell);
     }
   }
   get(
@@ -104,10 +108,14 @@ const getGrid = (rows, columns, mines) => {
 
 const getMines = (cellArray, mines) => {
   for (let index = 0; index < mines; index++) {
-    let x = Math.floor(Math.random() * cellArray.length);
-    let y = Math.floor(Math.random() * cellArray[0].length);
-    cellArray[x][y].isAMine = true;
+    let cell = getRandomCell(cellArray);
+    while (cell.isAMine) {
+      cell = getRandomCell(cellArray);
+    }
+    cell.isAMine = true;
   }
+
+  showMines(cellArray);
 };
 
 const getResults = cellArray => {
@@ -144,7 +152,7 @@ const showMines = cellArray => {
   for (let index = 0; index < cellArray.length; index++) {
     for (let index2 = 0; index2 < cellArray[index].length; index2++) {
       let cell = cellArray[index][index2];
-      cell.cellDom.onclick = null;
+      // cell.cellDom.onclick = null;
       if (cell.isAMine) {
         cell.cellDom.className = "mine";
       }
@@ -152,25 +160,31 @@ const showMines = cellArray => {
   }
 };
 
-const getRandomCell = cellArray => {
-  let x = Math.floor(Math.random() * cellArray.length);
-  let y = Math.floor(Math.random() * cellArray[0].length);
-  return cellArray[x][y];
+const getRandomCell = (cellArray = []) => {
+  if (cellArray.length > 0) {
+    let x = Math.floor(Math.random() * cellArray.length);
+    let y = Math.floor(Math.random() * cellArray[0].length);
+    return cellArray[x][y];
+  } else {
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  }
 };
 
-const generateClue = cellArray => {
-  let cell = getRandomCell(cellArray);
-
-  while (cell.isAMine || cell.mines === 0) {
-    cell = getRandomCell(cellArray);
+const generateClues = cellArray => {
+  if (candidates.length > 0) {
+    let cell = getRandomCell();
+    if (!cell.isAMine) {
+      cell.handleCellClick(cellArray);
+    }
+    candidates.splice(candidates.indexOf(cell), 1);
+    return generateClues(cellArray);
   }
-  cell.handleCellClick(cellArray);
 };
 
 const resetGrid = () => {
   get("grid").innerHTML = "";
-  let cellArray = getGrid(15, 15, 40);
-  generateClue(cellArray);
+  let cellArray = getGrid(15, 15, 50);
+  generateClues(cellArray);
 };
 
 resetGrid();
