@@ -28,10 +28,6 @@ class Cell {
     return this._cellDom;
   }
 
-  get mines() {
-    return this._mines;
-  }
-
   set neighbours(newCell) {
     this._neighbours.push(newCell);
   }
@@ -49,12 +45,8 @@ class Cell {
   };
 
   handleCellClick = cellArray => {
-    if (this._isAMine) {
-      showMines(cellArray);
-      alert("Game Over");
-    } else {
+    if (!this._isAMine) {
       this.cellDom.className = "clicked";
-      // this.cellDom.onclick = null;
       this.cellDom.innerHTML = this._mines > 0 ? this._mines : " ";
       if (this._mines === 0) {
         for (let index = 0; index < this._neighbours.length; index++) {
@@ -63,24 +55,9 @@ class Cell {
           }
         }
       }
-      if (isComplete(cellArray)) {
-        cellArray = [];
-      }
     }
   };
 }
-
-const isComplete = cellArray => {
-  for (let index = 0; index < cellArray.length; index++) {
-    for (let index2 = 0; index2 < cellArray[index].length; index2++) {
-      let cell = cellArray[index][index2];
-      if (!cell.isAMine && cell.cellDom.innerHTML == "") {
-        return false;
-      }
-    }
-  }
-  return true;
-};
 
 const getGrid = (rows, columns, mines) => {
   let cellArray = [];
@@ -91,7 +68,6 @@ const getGrid = (rows, columns, mines) => {
     for (let y = 0; y < columns; y++) {
       const cell = new Cell(false, x, y);
       cell.insertCell(row);
-      cell.cellDom.onclick = () => cell.handleCellClick(cellArray);
       cellArray[x].push(cell);
       candidates.push(cell);
     }
@@ -107,15 +83,13 @@ const getGrid = (rows, columns, mines) => {
 };
 
 const getMines = (cellArray, mines) => {
-  for (let index = 0; index < mines; index++) {
+  let mineCount = 0;
+  while (mineCount < mines) {
     let cell = getRandomCell(cellArray);
-    while (cell.isAMine) {
-      cell = getRandomCell(cellArray);
-    }
     cell.isAMine = true;
+    cell.cellDom.className = "mine";
+    mineCount++;
   }
-
-  showMines(cellArray);
 };
 
 const getResults = cellArray => {
@@ -146,18 +120,6 @@ const generateNeighbours = (cell, cellArray) => {
     }
   }
   cell.mines = mines;
-};
-
-const showMines = cellArray => {
-  for (let index = 0; index < cellArray.length; index++) {
-    for (let index2 = 0; index2 < cellArray[index].length; index2++) {
-      let cell = cellArray[index][index2];
-      // cell.cellDom.onclick = null;
-      if (cell.isAMine) {
-        cell.cellDom.className = "mine";
-      }
-    }
-  }
 };
 
 const getRandomCell = (cellArray = []) => {
